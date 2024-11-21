@@ -1,12 +1,10 @@
 name: CD
 
-
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-
+    branches: [main]
 
 jobs:
   build:
@@ -15,16 +13,16 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2 # workflow에서 액세스할 수 있도록 저장소를 체크아웃
-        
+
       - name: Install dependencies
         run: yarn install
-        
+
       - name: Build
         run: yarn build
 
       - name: S3 Deploy
         run: aws s3 sync ./dist s3://picky-web-main/ --acl bucket-owner-full-control # 현재 build된 폴더에 접근 후 s3 버킷인 csr-test-1-bucket에 파일 업로드
-        env: 
+        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -32,5 +30,5 @@ jobs:
         uses: chetan/invalidate-cloudfront-action@master
         env:
           AWS_DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_MAIN_ID }}
-          PATHS: '/index.html'
+          PATHS: "/index.html"
         continue-on-error: true
