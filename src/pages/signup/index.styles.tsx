@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 
 export const wrapper = css`
-    display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 16px;
@@ -88,7 +88,13 @@ export const backButtonWrapper = css`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
   width: 100%;
+  display: flex;
+  p{color: #ff084a;}
+
 `;
 
 export const backButton = css`
@@ -97,12 +103,28 @@ export const backButton = css`
   border: none;
   color: #ff084a;
   font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
   font-weight: bold;
   /* padding: 16px 16px 16px 8px; */
   cursor: pointer;
 
   &:hover {
     text-decoration: underline;
+  }
+`;
+
+export const backButtonStyle = css`
+  background: none; /* 배경색 제거 */
+  border: none; /* 테두리 제거 */
+  display: flex; /* 아이콘과 텍스트 정렬 */
+  align-items: center;
+  cursor: pointer; 
+
+  p {
+    margin: 0;
+    color: #ff084a; /* 텍스트 색상 */
   }
 `;
 

@@ -26,6 +26,7 @@ import {
   previousButton,
   nextButton,
   movieTitle,
+  selectedCount
 } from "./index.styles";
 
 const MOVIES = [
@@ -101,7 +102,7 @@ const InputFavoriteMovie: React.FC = () => {
               width: "100%",
             }}
           >
-            <div>
+            <div css={selectedCount}>
               선택된 영화:{" "}
               <span css={{ color: "#FF084A" }}>
                 {inputData.favoriteMovie.length}

@@ -12,6 +12,7 @@ import InputProfile from "./components/profile";
 import InputFavoriteGenre from "./components/favorite-genre";
 import InputFavoriteMovie from "./components/favorite-movie";
 import { IInputData } from "../../review/atoms";
+import BackButtonIcon from "@assets/icons/back_button_red.svg?react";
 import { Button, Text } from "../../styles/ui";
 import {
   progressBarContainer,
@@ -19,7 +20,7 @@ import {
   responsiveButtonWrapper,
   wrapper,
   backWrapper,
-  backButton,
+  backButtonStyle,
   backButtonWrapper,
 } from "./index.styles";
 
@@ -130,6 +131,9 @@ export default function Signup() {
       if (key === "favoriteMovie") {
         return Array.isArray(value) && value.length >= 5 && value.length <= 15;
       }
+      if (key === "consentAll" || key === "consentAge") {
+        return value === true;
+      }
       return typeof value === "string" ? value.trim() !== "" : value !== null;
     });
 
@@ -146,22 +150,17 @@ export default function Signup() {
   return (
     <div css={wrapper}>
       <div css={backWrapper}>
-      <div css={progressBarContainer}>
-        <div css={progressStyle((step / steps.length) * 100)} />
-      </div>
-      <div css={backButtonWrapper}>
-        {
-          <button
-            css={backButton}
-            onClick={handleBackStep}
-            style={{
-              visibility: step === 1 ? "hidden" : "visible",
-            }}
-          >
-            뒤로
-          </button>
-        }
-      </div>
+        <div css={progressBarContainer}>
+          <div css={progressStyle((step / steps.length) * 100)} />
+        </div>
+        <div css={backButtonWrapper}>
+          {step > 1 && (
+            <button css={backButtonStyle} onClick={handleBackStep}>
+              <BackButtonIcon width="16px" height="16px" />
+              <p>뒤로</p>
+            </button>
+          )}
+        </div>
       </div>
 
       {components.map((component) => component)}

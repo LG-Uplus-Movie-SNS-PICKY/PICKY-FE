@@ -57,8 +57,14 @@ export const subtitle = css`
 
 export const pageIndicator = css`
   text-align: right;
-  padding: 0 24px;
+  padding: 0 24px 0 32px;
 `;
+
+export const selectedCount = css`
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 8px;
+`
 
 export const totalContainer = css`
   display: flex;
