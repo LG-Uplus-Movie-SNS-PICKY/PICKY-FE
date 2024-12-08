@@ -69,7 +69,7 @@ const genres = [
 
 const MovieGenreSelector = () => {
   const [inputData, setInputData] = useRecoilState(inputState);
-  const [isValid, setIsValid] = useState(true); // 유효성 상태 추가
+  const [isValid, setIsValid] = useState(true);
 
   const validateGenres = useCallback(() => {
     const genreCount = inputData.favoriteGenres.length;
@@ -80,7 +80,9 @@ const MovieGenreSelector = () => {
     setInputData((prev) => {
       const updatedGenres = prev.favoriteGenres.includes(id)
         ? prev.favoriteGenres.filter((genreId) => genreId !== id)
-        : [...prev.favoriteGenres, id];
+        : prev.favoriteGenres.length < 5
+        ? [...prev.favoriteGenres, id]
+        : prev.favoriteGenres;
 
       return {
         ...prev,
@@ -90,7 +92,7 @@ const MovieGenreSelector = () => {
   };
 
   useEffect(() => {
-    setIsValid(validateGenres()); // 장르 선택 유효성 검사
+    setIsValid(validateGenres());
   }, [inputData.favoriteGenres, validateGenres]);
 
   return (
@@ -121,12 +123,12 @@ const MovieGenreSelector = () => {
         </div>
       </div>
       <div css={TextWrapper} style={{ height: "20px" }}>
-          <div css ={Warning}
-            style={{ visibility: isValid ? "hidden" : "visible" }}
-          >
-            {/* 최소 장르 3개 ~ 최대 장르 5개 선택해 주세요. */}
-          </div>
+        <div
+          css={Warning}
+          style={{ visibility: isValid ? "hidden" : "visible" }}
+        >
         </div>
+      </div>
     </div>
   );
 };

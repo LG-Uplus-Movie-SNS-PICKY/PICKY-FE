@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import axios from "axios";
+import { debounce } from "lodash";
 import profileIcon from "@assets/icons/profile.svg";
 import {
   containerStyle,
@@ -6,18 +8,21 @@ import {
   headerTitleStyle,
   profileImageContainerStyle,
   profileImageStyle,
+  labelStyle,
   photoEditStyle,
   inputRowStyle,
+  inputWrapperStyle,
   inputLabelStyle,
-  inputStyle,
   readonlyInputStyle,
+  edityInputStyle,
+  errorTextStyle,
   profileWrapper,
   saveButtonStyle,
   buttonWrapper,
   photoEditWrapper,
-  errorTextStyle,
 } from "./index.styles";
 import SEO from "@components/seo";
+import { Toast } from "@stories/toast";
 
 export default function ProfileEditPage() {
   const initialNickname = "먹식이";
@@ -30,57 +35,137 @@ export default function ProfileEditPage() {
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
 
-  // 닉네임 변경 핸들러
+  // Toast 표시 함수
+  const showToast = (message: string) => {
+    setToastMessage(message);
+  };
+
+  // 닉네임 중복 체크 API 호출 함수
+  const checkNicknameAvailability = useCallback(async (nickname: string) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
+        { params: { nickname } }
+      );
+
+      if (!response.data.data.isValid) {
+        setNicknameError("이미 사용 중인 닉네임입니다.");
+        setIsNicknameValid(false);
+      } else {
+        setNicknameError(null);
+        setIsNicknameValid(true);
+      }
+    } catch (error) {
+      console.error("API 요청 중 오류 발생:", error);
+      setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+      setIsNicknameValid(false);
+    }
+  }, []);
+
+  // debounce된 닉네임 중복 체크 함수
+  const debouncedCheckNickname = useMemo(
+    () =>
+      debounce((nickname: string) => {
+        checkNicknameAvailability(nickname);
+      }, 100),
+    [checkNicknameAvailability]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedCheckNickname.cancel();
+    };
+  }, [debouncedCheckNickname]);
+
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    if (value.length > 10) {
+      return; // 입력값이 10자를 초과하면 무시
+    }
+
     setNickname(value);
 
-    // 유효성 검사: 최소 2자 이상, 최대 10자, 공백 포함 금지
     if (value.length < 2 || value.length > 10) {
       setNicknameError("닉네임은 2자 이상, 10자 이하로 입력해주세요.");
+      setIsNicknameValid(false);
     } else if (/\s/.test(value)) {
       setNicknameError("닉네임에 공백은 포함될 수 없습니다.");
+      setIsNicknameValid(false);
     } else {
       setNicknameError(null);
+      setIsNicknameValid(null);
+      debouncedCheckNickname(value);
     }
   };
 
-  // 이미지 업로드 핸들러
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = () => {
         setProfileImage(reader.result as string);
-        setImageError(null); // 이미지 업로드 시 오류 상태 초기화
+        setImageError(null);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // 수정 버튼 클릭 핸들러
   const handleSave = () => {
-    if (nicknameError || imageError) {
-      alert("입력을 확인해주세요.");
+    const isUnchanged =
+      nickname === initialNickname && profileImage === initialProfileImage;
+
+    if (isUnchanged) {
+      showToast("변경 사항이 없습니다.");
       return;
     }
 
-    alert("프로필이 수정되었습니다.");
+    if (nicknameError || imageError || isNicknameValid === false) {
+      showToast("입력을 확인해주세요.");
+      return;
+    }
+
+    showToast("프로필이 수정되었습니다.");
   };
 
-  // 초기값과 비교하여 수정 버튼 활성/비활성 상태 업데이트
+  const handleDisabledClick = () => {
+    if (!isSaveDisabled) return;
+
+    const isUnchanged =
+      nickname === initialNickname && profileImage === initialProfileImage;
+    if (isUnchanged) {
+      showToast("변경 사항이 없습니다.");
+    } else if (nicknameError || imageError) {
+      showToast("닉네임의 요구사항을 따라주세요.");
+    }
+  };
+
   useEffect(() => {
     const isUnchanged =
       nickname === initialNickname && profileImage === initialProfileImage;
 
-    const hasError = !!nicknameError || !!imageError;
+    const hasError =
+      !!nicknameError || !!imageError || isNicknameValid === false;
 
     setIsSaveDisabled(isUnchanged || hasError);
-  }, [nickname, profileImage, nicknameError, imageError]);
+  }, [nickname, profileImage, nicknameError, imageError, isNicknameValid]);
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage(null);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   return (
     <>
+      {toastMessage && <Toast message={toastMessage} />}
       <SEO title={`${nickname}: 프로필 수정`} />
 
       <div css={containerStyle}>
@@ -106,27 +191,32 @@ export default function ProfileEditPage() {
             style={{ display: "none" }}
             onChange={handleImageUpload}
           />
-          {imageError && <p css={errorTextStyle}>{imageError}</p>} 
         </div>
 
         <div css={profileWrapper}>
           <div css={inputRowStyle}>
             <label css={inputLabelStyle}>닉네임</label>
-            <div style={{ width: "100%" }}>
+            <div css={inputWrapperStyle}>
               <input
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
-                css={inputStyle}
+                css={edityInputStyle}
+                maxLength={10}
               />
-              {nicknameError && (
-                <p css={errorTextStyle}>{nicknameError}</p> 
-              )}
+              <span
+                css={errorTextStyle}
+                style={{
+                  visibility: nicknameError ? "visible" : "hidden",
+                }}
+              >
+                {nicknameError && nicknameError}
+              </span>
             </div>
           </div>
 
           <div css={inputRowStyle}>
-            <label css={inputLabelStyle}>이름</label>
+            <label css={labelStyle}>이름</label>
             <input
               type="text"
               value="최우진"
@@ -136,7 +226,7 @@ export default function ProfileEditPage() {
           </div>
 
           <div css={inputRowStyle}>
-            <label css={inputLabelStyle}>생년월일</label>
+            <label css={labelStyle}>생년월일</label>
             <input
               type="text"
               value="2002-09-18"
@@ -146,12 +236,12 @@ export default function ProfileEditPage() {
           </div>
 
           <div css={inputRowStyle}>
-            <label css={inputLabelStyle}>성별</label>
+            <label css={labelStyle}>성별</label>
             <input type="text" value="여자" readOnly css={readonlyInputStyle} />
           </div>
 
           <div css={inputRowStyle}>
-            <label css={inputLabelStyle}>국적</label>
+            <label css={labelStyle}>국적</label>
             <input
               type="text"
               value="내국인"
@@ -162,9 +252,8 @@ export default function ProfileEditPage() {
         </div>
         <div css={buttonWrapper}>
           <button
-            onClick={handleSave}
+            onClick={isSaveDisabled ? handleDisabledClick : handleSave}
             css={saveButtonStyle}
-            disabled={isSaveDisabled} // 비활성화 상태 적용
             style={{
               backgroundColor: isSaveDisabled ? "#d9d9d9" : "#ff084a",
               cursor: isSaveDisabled ? "not-allowed" : "pointer",

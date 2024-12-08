@@ -32,10 +32,10 @@ export const filterContainerStyle = css`
   align-items: center;
   justify-content: center;
   padding: 0 8px 0 0;
-  border-right: 1px solid #D9D9D9;
+  border-right: 1px solid #d9d9d9;
   font-family: 12px;
   font-weight: 600;
-  color: #FF084A;
+  color: #ff084a;
   cursor: pointer;
   &:hover {
     opacity: 0.8;
@@ -43,25 +43,26 @@ export const filterContainerStyle = css`
 `;
 
 export const filterLabelStyle = css`
-color: #FF084A;
-font-size: 12px;
-font-style: normal;
-font-weight: 600;
-text-align: center; /* 텍스트 중앙 정렬 */
-  display: flex; /* Flex로 자식 요소 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-letter-spacing: 0.5px;
+  color: #ff084a;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 00;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
 `;
 
 export const filterModalStyle = css`
   position: absolute;
   top: 11%;
-  left:12%;
-  background: #FFFFFF;
+  left: 12%;
+  background: #ffffff;
   border-radius: 10px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   padding: 4px;
-  z-index: 1000; /* 항상 위에 렌더링 */
+  z-index: 1000;
 `;
 
 export const filterOptionStyle = css`
@@ -71,11 +72,11 @@ export const filterOptionStyle = css`
   font-weight: 400;
   color: #000000;
   letter-spacing: -0.5px;
-  border-bottom: 0.5px solid #F1F1F1;
+  border-bottom: 0.5px solid #f1f1f1;
   cursor: pointer;
 
   &:last-of-type {
-    border-bottom: none; /* 마지막 옵션 아래쪽 보더 제거 */
+    border-bottom: none;
   }
 `;
 
@@ -84,18 +85,19 @@ export const filterButtonStyle = css`
   height: 38px;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  /* flex-direction: column; */
   background-color: #f1f1f1;
   padding: 8px 0 8px 16px;
   border-radius: 50px 0px 0px 50px;
-  background: #F1F1F1;
+  background: #f1f1f1;
+  font-family: 400;
 `;
 
 export const filterIconStyle = css`
   width: 16px;
   height: 16px;
   margin-right: 8px;
-`;  
+`;
 
 export const searchInputStyle = css`
   display: flex;
@@ -122,7 +124,7 @@ export const searchInputStyle = css`
   }
 
   &::placeholder {
-    color: #9D9D9D;
+    color: #9d9d9d;
     font-size: 12px;
     font-weight: 400;
   }

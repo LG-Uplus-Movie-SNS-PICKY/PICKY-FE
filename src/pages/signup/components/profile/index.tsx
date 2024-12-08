@@ -11,7 +11,6 @@ import {
   fileInput,
   customFileLabel,
   imageContainer,
-  styledImage,
   defaultImageText,
   profileContainer,
 } from "./index.styles";
@@ -21,7 +20,6 @@ export default function InputProfile() {
   const [userInfo, setUserInfo] = useRecoilState(userState);
   const [inputData, setInputData] = useRecoilState(inputState);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const showToastMessage = (message: string) => {
     setToastMessage(null);
@@ -31,16 +29,13 @@ export default function InputProfile() {
 
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    e.target.value = ""; // 파일 입력 초기화
+    e.target.value = "";
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
         showToastMessage("파일 크기는 5MB를 초과할 수 없습니다.");
         return;
       }
       const imageUrl = URL.createObjectURL(file);
-      setIsAnimating(true); // 애니메이션 시작
-      setTimeout(() => setIsAnimating(false), 600); // 애니메이션 종료
-
       setUserInfo((prev) => ({ ...prev, profileImage: imageUrl }));
       setInputData((prev) => ({ ...prev, profileImage: imageUrl }));
       showToastMessage("이미지가 성공적으로 업로드되었습니다.");
@@ -50,8 +45,6 @@ export default function InputProfile() {
 
   const setDefaultImage = () => {
     if (userInfo.profileImage !== defaultUserImage) {
-      setIsAnimating(true); // 애니메이션 시작
-      setTimeout(() => setIsAnimating(false), 600); // 애니메이션 종료
       setUserInfo((prev) => ({ ...prev, profileImage: defaultUserImage }));
       setInputData((prev) => ({ ...prev, profileImage: defaultUserImage }));
       showToastMessage("기본 이미지가 설정되었습니다.");
@@ -70,7 +63,6 @@ export default function InputProfile() {
           <img
             src={userInfo.profileImage}
             alt="프로필 미리보기"
-            // css={styledImage(isAnimating)}
             width={240}
             height={240}
           />
@@ -91,7 +83,10 @@ export default function InputProfile() {
       <span
         css={[
           defaultImageText,
-          { visibility: userInfo.profileImage === defaultUserImage ? "hidden" : "visible" },
+          {
+            visibility:
+              userInfo.profileImage === defaultUserImage ? "hidden" : "visible",
+          },
         ]}
         onClick={setDefaultImage}
       >

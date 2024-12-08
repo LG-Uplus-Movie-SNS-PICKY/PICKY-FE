@@ -27,6 +27,11 @@ export const headerTitleStyle = css`
 
 export const profileImageContainerStyle = css`
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  flex-shrink: 0;
 `;
 
 export const profileImageStyle = css`
@@ -52,6 +57,47 @@ export const photoEditStyle = css`
   text-align: center;
 `;
 
+export const inputWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 65%;
+  /* gap: 4px; */
+
+  & > input {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-bottom: 1px solid #d9d9d9;
+    font-size: 14px;
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid #ff084a;
+    }
+  }
+
+  & > .error-message {
+    color: red;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+`;
+
+// export const inputRowStyles = css`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   justify-content: space-between;
+//   width: 100%;
+//   margin-bottom: 16px;
+
+//   & > label {
+//     font-size: 16px;
+//     font-weight: 600;
+//     margin-bottom: 8px;
+//   }
+// `;
+
 export const inputRowStyle = css`
   display: flex;
   align-items: center;
@@ -65,7 +111,14 @@ export const inputLabelStyle = css`
   font-family: Pretendard;
   font-size: 16px;
   font-weight: 600;
-  /* flex: 1 0 0; */
+  margin-bottom: 16px;
+`;
+
+export const labelStyle = css`
+  color: #000;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
 `;
 
 const sharedInputStyle = css`
@@ -83,12 +136,16 @@ const sharedInputStyle = css`
 `;
 
 export const inputStyle = css`
- display: flex;
-padding: 16px 0px;
-align-items: center;
-align-self: stretch;
-border-bottom: 1px solid #D9D9D9;
-/* width: 100%; */
+  display: flex;
+  padding: 16px 0px;
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid #d9d9d9;
+`;
+
+export const edityInputStyle = css`
+  ${sharedInputStyle};
+  color: #000;
 `;
 
 export const readonlyInputStyle = css`
@@ -96,14 +153,14 @@ export const readonlyInputStyle = css`
   color: #9d9d9d;
 `;
 
-export const protfileWrapper = css`
-  justify-content: space-between;
-  padding: 0px 16px;
-  align-items: center;
-  gap: 32px;
-  flex-shrink: 0;
-  align-self: stretch;
-`;
+// export const protfileWrapper = css`
+//   justify-content: space-between;
+//   padding: 0px 16px;
+//   align-items: center;
+//   gap: 32px;
+//   flex-shrink: 0;
+//   align-self: stretch;
+// `;
 
 export const saveButtonStyle = css`
   width: 100%;
@@ -139,4 +196,7 @@ export const errorTextStyle = css`
   color: #ff084a;
   font-size: 12px;
   margin-top: 4px;
+  margin-left: 12px;
+  line-height: 1.2;
+  height: 12px;
 `;
