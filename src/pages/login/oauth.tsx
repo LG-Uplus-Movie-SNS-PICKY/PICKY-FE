@@ -48,7 +48,7 @@ const LoginCallback: React.FC = () => {
 
         // 회원가입 여부 확인 후 페이지 이동
         if (isRegistrationDone) {
-          navigate("/auth/sign-in");
+          navigate("/");
         } else {
           navigate("/auth/sign-up");
         }

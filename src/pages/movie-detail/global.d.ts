@@ -25,7 +25,7 @@ declare global {
       showinfo?: number;
       start?: number;
       widget_referrer?: string;
-      index?: number; // 'index' 속성 추가
+      index?: number;  // 'index' 속성 추가
     }
 
     interface PlayerOptions {
