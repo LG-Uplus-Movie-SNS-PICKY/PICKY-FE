@@ -10,20 +10,17 @@ interface OperationCardTypes {
   image: string;
   title: string;
   context: string;
+  onClick: () => void;
 }
 
-function OperationCard({ image, title, context }: OperationCardTypes) {
+function OperationCard({ image, title, context, onClick }: OperationCardTypes) {
   const [isLoading, setIsLoading] = useState(false);
-  const [isHover, setIsHover] = useState(false);
+
   return (
     // Card Container
-    <div
-      css={styles.cardContainer()}
-      onMouseOver={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
-    >
+    <div css={styles.cardContainer()} onClick={onClick}>
       {/* Card Thumbnail */}
-      <div css={styles.cardThumbnail()} className={isHover ? "hover" : ""}>
+      <div css={styles.cardThumbnail()}>
         <LazyLoadImage
           src={image}
           effect={"blur"}

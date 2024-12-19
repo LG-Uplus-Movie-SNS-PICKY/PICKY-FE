@@ -9,15 +9,8 @@ interface SEOProps {
 }
 
 function SEO({ title = "PICKY", description, image, url }: SEOProps) {
-  const defaultImage =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:5173/public/images/picky.jpeg"
-      : "https://www.picky-movie.com/images/picky.jpeg";
-
-  const defaultURL =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:5173"
-      : "https://www.picky-movie.com";
+  const defaultImage = "https://www.picky-movie.com/images/picky.jpeg";
+  const defaultURL = "https://www.picky-movie.com";
 
   return (
     <Helmet>

@@ -36,7 +36,7 @@ export default function Login() {
       const data = await axios
         .patch(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-          { id: 6 },
+          { id: 5 },
           {
             headers: {
               Authorization: "1",

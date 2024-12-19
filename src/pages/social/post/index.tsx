@@ -44,6 +44,7 @@ import {
 } from "./index.styles";
 import { FileInput } from "@stories/file-input";
 import { useQueryClient } from "@tanstack/react-query";
+import { GENRE_EMOJI } from "@constants/genre";
 
 interface MovieData {
   movieId: number;
@@ -85,7 +86,7 @@ export default function SocialPost() {
         const results = await fetchMovieSearch(value);
         setFilteredMovies(results);
       } catch (error) {
-        console.error("영화 검색 중 오류 발생:", error);
+        // console.error("영화 검색 중 오류 발생:", error);
       }
     } else {
       setFilteredMovies([]);
@@ -93,7 +94,7 @@ export default function SocialPost() {
   };
 
   const handleMovieSelect = (movie: MovieData) => {
-    console.log("선택된 영화:", movie.genres);
+    // console.log("선택된 영화:", movie.genres);
         
     setSelectedMovie({
       movieId: movie.movieId,
@@ -196,7 +197,12 @@ export default function SocialPost() {
     if (!selectedMovie) return;
 
     try {
-      await createBoard(reviewText, 13, selectedSpoiler === "있음", mediaFiles);
+      await createBoard(
+        reviewText,
+        selectedMovie.movieId,
+        selectedSpoiler === "있음",
+        mediaFiles
+      );
 
       setToastMessage("게시글이 성공적으로 생성되었습니다."); // 성공 메시지
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });
@@ -205,6 +211,11 @@ export default function SocialPost() {
     } catch (error) {
       setToastMessage("게시글 생성에 실패했습니다.");
     }
+  };
+
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "정보 없음";
+    return dateString.split("T")[0];
   };
 
   return (
@@ -234,12 +245,22 @@ export default function SocialPost() {
           </div>
           <h2 css={movieTitleStyle}>{selectedMovie.movieTitle}</h2>
           <div css={movieDetails}>
-            <p>🕑 {selectedMovie.releaseDate}</p>
+            <p>🕑 {formatDate(selectedMovie.releaseDate)}</p>
           </div>
           <div css={movieGenres}>
             {selectedMovie?.genres?.length > 0 ? (
-              selectedMovie.genres.map((genre, idx) => (
-                <span key={`${genre}-${idx}`}>{genre.name}</span>
+              selectedMovie.genres.slice(0, 3).map((genre, idx) => (
+                <span key={`${genre.genreId}-${idx}`}>
+                  {genre.name in GENRE_EMOJI ? (
+                    <>
+                      {GENRE_EMOJI[genre.name as keyof typeof GENRE_EMOJI]}{" "}
+                      {/* 이모지 */}
+                      <span>{genre.name}</span> {/* 장르 이름 */}
+                    </>
+                  ) : (
+                    genre.name
+                  )}
+                </span>
               ))
             ) : (
               <span>장르 정보가 없습니다.</span>

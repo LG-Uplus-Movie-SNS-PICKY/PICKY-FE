@@ -26,15 +26,6 @@ export default {
       box-sizing: border-box;
       overflow: hidden;
 
-      transform: scale(1);
-      transition: all 0.3s ease-in-out;
-
-      &.hover {
-        transform: scale(1.3);
-        & > span.lazy-load-image-background {
-        }
-      }
-
       & img {
         display: block;
         width: 100%;

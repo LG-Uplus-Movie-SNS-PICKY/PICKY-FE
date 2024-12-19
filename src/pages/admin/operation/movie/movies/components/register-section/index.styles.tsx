@@ -198,8 +198,12 @@ export default {
         align-items: center;
         gap: 12px;
 
+        & > .logo {
+          width: 148px;
+        }
+
         & > h3 {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 600;
           color: #191919;
         }

@@ -12,7 +12,7 @@ export const wrapper = css`
 export const banner = css`
   width: 100%;
   height: 80px;
-  margin: 16px 0;
+  margin-bottom: 16px;
   background: #000000;
   border-radius: 4px;
   overflow: hidden;
@@ -54,7 +54,7 @@ export const textSection = css`
   gap: 2px;
 `;
 
-export const movieTitle = css`
+export const movieTitleStyle = css`
   color: #9d9d9d;
   font-size: 12px;
   font-weight: 400;

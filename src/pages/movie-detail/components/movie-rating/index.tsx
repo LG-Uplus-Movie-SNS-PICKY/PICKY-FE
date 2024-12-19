@@ -21,6 +21,7 @@ import MovieLogSvg from "@assets/icons/movie_log.svg?react";
 import BehindSvg from "@assets/icons/behind.svg?react";
 import { toggleMovieLike } from "@api/movie";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface MovieRatingProps {
   rating: number;
@@ -48,6 +49,8 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
   const [showBehindModal, setShowBehindModal] = useState(false);
   const [peopleCount, setPeopleCount] = useState<number>(getRandomPeopleCount); // 관람자 수 상태
 
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
 
   const handleMovieLog = () => {
@@ -57,6 +60,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
   const handleToggleLike = async () => {
     try {
       const response = await toggleMovieLike(movieId);
+      queryClient.refetchQueries({ queryKey: ["movieDetail", movieId] });
       setLikeActive((prev) => !prev); // 좋아요 상태 변경
     } catch (error) {}
   };

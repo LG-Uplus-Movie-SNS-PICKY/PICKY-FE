@@ -44,6 +44,7 @@ import {
   useFetchFollowersListQuery,
   useFetchFollowingsListQuery,
 } from "@hooks/follow";
+import { useQueryClient } from "@tanstack/react-query";
 
 function My() {
   const { nickname } = useParams(); // URL에서 nickname 추출
@@ -134,6 +135,8 @@ function My() {
     navigate(`/user/${myNickname}/edit`);
   };
 
+  const queryClient = useQueryClient();
+
   // 팔로우/팔로잉 버튼 클릭 시
   const handleFollowClick = async () => {
     const followingId = userId; // 팔로우 대상 ID
@@ -148,6 +151,9 @@ function My() {
 
       // 서버에 팔로우/언팔로우 요청 보내기
       const response = await toggleFollow(followingId);
+
+      queryClient.refetchQueries({ queryKey: ["following", nickname] });
+      queryClient.refetchQueries({ queryKey: ["followers", nickname] });
 
       if (!response.success) {
         throw new Error(response.message || "팔로우 처리 실패");

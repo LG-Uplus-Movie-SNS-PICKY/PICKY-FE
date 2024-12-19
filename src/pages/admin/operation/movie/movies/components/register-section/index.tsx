@@ -7,7 +7,7 @@ import styles from "./index.styles";
 
 import Search from "@assets/icons/search.svg?react";
 import AddCircle from "@assets/icons/add_circle.svg?react";
-import Logo from "@assets/icons/logo.svg?react";
+import Logo from "@assets/icons/main_logo.svg?react";
 
 import Netflix from "@assets/icons/netflix.svg?react";
 import Watcha from "@assets/icons/watcha.svg?react";
@@ -20,12 +20,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 import Check from "@assets/icons/check.svg?react";
-import {
-  GOOGLE_LOGIN_URL,
-  KAKAO_LOGIN_URL,
-  NAVER_LOGIN_URL,
-  TMDB_API_KEY,
-} from "@api/constants";
+
 import { useDetailMovieInfo, useSearchMovie } from "@hooks/movie";
 import { fetchMovieCreate } from "@api/movie";
 import Loading from "@components/loading";
@@ -228,7 +223,9 @@ function RegistMovieSection() {
         <div css={styles.movieDetailContainer()}>
           {!movieInfo ? (
             <div className="no-detail-movie-info">
-              <Logo />
+              <div className="logo">
+                <Logo />
+              </div>
               <h3>검색창에 영화 제목 검색 후 리스트 중 하나를 선택해주세요</h3>
             </div>
           ) : (

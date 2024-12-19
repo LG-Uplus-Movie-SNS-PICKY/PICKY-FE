@@ -80,7 +80,7 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
     sessionStorage.clear();
 
     const { pathname } = location;
-    console.log(pathname);
+    // console.log(pathname);
 
     window.location.href = "/";
 

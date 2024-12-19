@@ -18,6 +18,7 @@ import { FreeMode, Mousewheel } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 export interface ModalStateTypes {
   type: "create" | "edit";
@@ -52,6 +53,8 @@ function Modal({
   const [selectButton, setSelectButton] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (loadable.state === "hasValue" && loadable.contents.data.length > 0) {
       setSelectButton(loadable.contents.data[0].genreId);
@@ -67,7 +70,7 @@ function Modal({
   } = useGenreMovieQuery(selectButton ?? -1);
 
   const { ref, inView } = useInView({
-    threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+    threshold: 0.7, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
   });
 
   useEffect(() => {
@@ -110,6 +113,8 @@ function Modal({
       await fetchCreatePlaylist(selectMovie, title);
       setToastMessage("플레이리스트가 추가되었습니다!!");
       isFlag = true;
+
+      queryClient.refetchQueries({ queryKey: ["playlist"] });
     }
 
     // 현재 모달 Type이 Edit 모달이면서, 공통 예외를 모두 통과한 경우
@@ -124,6 +129,7 @@ function Modal({
       if (openModal?.playlistId) {
         await fetchUpdatePlaylist(openModal.playlistId, title, selectMovie);
         setToastMessage("플레이리스트가 수정되었습니다!!");
+        queryClient.refetchQueries({ queryKey: ["playlist"] });
         isFlag = true;
       }
     }
@@ -137,8 +143,6 @@ function Modal({
           movieIds: [],
           playlistId: 0,
         });
-
-        window.location.reload();
       }, 1000);
     }
   };

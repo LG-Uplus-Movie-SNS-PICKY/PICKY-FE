@@ -2,7 +2,7 @@ import apiClient from "@api";
 
 // 플레이리스트 조회 API 호출
 export async function fetchPlaylists(lastPlaylistId: number) {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams({ size: "6" });
 
   // lastPlaylistId가 입력되면 해당 값을 Query String에 포함시킨다.
   if (lastPlaylistId) {

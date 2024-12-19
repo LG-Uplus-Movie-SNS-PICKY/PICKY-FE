@@ -3,8 +3,8 @@ import DisneyPlus from "@assets/icons/disneyplus.svg?react";
 import Watcha from "@assets/icons/watcha.svg?react";
 import styles from "./index.styles";
 
-import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
-import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -92,7 +92,7 @@ function RecommendMovieSlider() {
                       <h3>{movie.title}</h3>
                       <div className="movie-sub-info">
                         <span className="rate">
-                          별점: ★ {movie.totalRating}
+                          별점: ★ {movie.totalRating.toFixed(1)}
                         </span>
                         <span className="genres">
                           {movie.genres.map((genre) => genre.name).join(", ")}
